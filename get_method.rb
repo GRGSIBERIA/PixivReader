@@ -2,13 +2,12 @@
 PixivにGetリクエストを投げるためのクラス
 =end
 require 'net/http'
-require './WWW/page_type.rb'
 
 # GETリクエストを送るクラス
 class GetRequest
 
 	# 初期化するのにページの種類を指定する
-	# PageTypeクラスの定数を使うのを推奨
+	# 小文字でillustかmemberのどちらか
 	def initialize(page_type)
 		@request_url = "www.pixiv.net"
 		@page_url = ""
@@ -17,9 +16,9 @@ class GetRequest
 		
 		# PageTypeの内容からどのページにリクエストを送りたいのか判断する
 		case page_type
-		when PageType::MEMBER
+		when "member"
 			@page_url = "/member.php"
-		when PageType::MEMBER_ILLUST
+		when "illust"
 			@page_url = "/member_illust.php"
 		end
 	end
