@@ -1,21 +1,21 @@
 =begin
-Pixiv‚ÉGetƒŠƒNƒGƒXƒg‚ğ“Š‚°‚é‚½‚ß‚ÌƒNƒ‰ƒX
+Pixivã«Getãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’æŠ•ã’ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
 =end
 require 'net/http'
 require './WWW/page_type.rb'
 
-# GETƒŠƒNƒGƒXƒg‚ğ‘—‚éƒNƒ‰ƒX
+# GETãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ã‚‹ã‚¯ãƒ©ã‚¹
 class GetRequest
 
-	# ‰Šú‰»‚·‚é‚Ì‚Éƒy[ƒW‚Ìí—Ş‚ğw’è‚·‚é
-	# PageTypeƒNƒ‰ƒX‚Ì’è”‚ğg‚¤‚Ì‚ğ„§
+	# åˆæœŸåŒ–ã™ã‚‹ã®ã«ãƒšãƒ¼ã‚¸ã®ç¨®é¡ã‚’æŒ‡å®šã™ã‚‹
+	# PageTypeã‚¯ãƒ©ã‚¹ã®å®šæ•°ã‚’ä½¿ã†ã®ã‚’æ¨å¥¨
 	def initialize(page_type)
 		@request_url = "www.pixiv.net"
 		@page_url = ""
 		@param_value_pair = Hash::new
 		@set_param_flag = false
 		
-		# PageType‚Ì“à—e‚©‚ç‚Ç‚Ìƒy[ƒW‚ÉƒŠƒNƒGƒXƒg‚ğ‘—‚è‚½‚¢‚Ì‚©”»’f‚·‚é
+		# PageTypeã®å†…å®¹ã‹ã‚‰ã©ã®ãƒšãƒ¼ã‚¸ã«ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ã‚ŠãŸã„ã®ã‹åˆ¤æ–­ã™ã‚‹
 		case page_type
 		when PageType::MEMBER
 			@page_url = "/member.php"
@@ -24,7 +24,7 @@ class GetRequest
 		end
 	end
 	
-	# GET‚Å‘—‚éƒpƒ‰ƒ[ƒ^‚Æ’l‚ğw’è‚·‚é
+	# GETã§é€ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¨å€¤ã‚’æŒ‡å®šã™ã‚‹
 	def SetParameter(parameter, value)
 		if @set_param_flag == false then
 			@page_url += "?"
@@ -34,14 +34,14 @@ class GetRequest
 		@page_url += parameter.to_s +  "=" + value.to_s
 	end
 	
-	# GET‚ÅƒŠƒNƒGƒXƒg‚ğ‘—M‚µA‚»‚ÌŒ‹‰Ê‚ğæ“¾‚·‚é
+	# GETã§ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ä¿¡ã—ã€ãã®çµæœã‚’å–å¾—ã™ã‚‹
 	def SendRequest()	
-		# URL‚ğ“WŠJ‚µ‚ÄGET‚ÅƒAƒNƒZƒXAresponse‚ÉŒ‹‰Ê‚ğ“ü‚ê‚é
+		# URLã‚’å±•é–‹ã—ã¦GETã§ã‚¢ã‚¯ã‚»ã‚¹ã€responseã«çµæœã‚’å…¥ã‚Œã‚‹
 		request = Net::HTTP::Get.new(@page_url)
 		response = Net::HTTP.start(@request_url, 80) {|http|
 			http.request(request)
 		}
-		return response.body	# –{•¶‚Ì‚İ‚ğ•Ô‚·
+		return response.body	# æœ¬æ–‡ã®ã¿ã‚’è¿”ã™
 	end
 end
 

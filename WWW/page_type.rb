@@ -1,12 +1,12 @@
-=begin
-���N�G�X�g�𑗂肽���y�[�W�̎�ށB
-�C���X�g�Ȃ̂��A�����o�[�Ȃ̂��A�ȂǁB
+﻿=begin
+リクエストを送りたいページの種類。
+イラストなのか、メンバーなのか、など。
 =end
 
-# Pixiv�őJ�ڂ������y�[�W�̎��
+# Pixivで遷移したいページの種類
 class PageType
-	# Pixiv�����o�[�̃y�[�W
+	# Pixivメンバーのページ
 	MEMBER = 0
-	# Pixiv�����o�[�̃C���X�g�y�[�W
+	# Pixivメンバーのイラストページ
 	MEMBER_ILLUST = 1
 end
