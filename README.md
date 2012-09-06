@@ -16,7 +16,7 @@ illust = Illust.new(画像のID)
 短いコードで簡単に利用することができます。
 
 
-===ドキュメント===
+===マニュアル===
 
 Illustクラス
 	イラストの情報が格納されるクラスです。
@@ -44,3 +44,19 @@ Illustクラス
 	
 	member_name :: String
 		投稿者の名前です。
+		
+		
+===著作権表示など===
+このソースコードはパブリック・ドメインにしています。
+このソースコードの改変、再配布、継承は自由です。
+表示の必要もありません。
+
+
+神奈川工科大学大学大学院
+		博士前期 情報工学専攻
+			速水研究室所属　竹渕瑛一（GRGSIBERIA）
+			
+mail: nanashi4129(あ)gmail.com
+twit: https://twitter.com/GRGSIBERIA
+blog: http://blogs.yahoo.co.jp/nanashi_hippie
+FB: http://www.facebook.com/takebuchie
