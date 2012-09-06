@@ -1,11 +1,21 @@
 ﻿=begin
 イラスト用クラスのファイル
 =end
-require './get_method.rb'
-require './pixiv/html_source.rb'
+require 'net/http'
 require 'mechanize'
-require 'kconv'
-require 'rubygems'
+
+
+
+# MechanizeでHTMLのソースコードを取得するクラス
+class HTMLSource
+	# URLからGETリクエストを送り、ソースコードを取得する
+	def initialize(url)
+		@agent = Mechanize.new
+		@agent.get(url)
+	end
+end
+
+
 
 # イラスト情報を格納するためのクラス
 class Illust < HTMLSource
@@ -18,14 +28,14 @@ class Illust < HTMLSource
 	
 		@illust_id = illust_id
 		@illust_title = GetTitle()
-		@description = GetDescription()
+		@caption = GetCaption()
 		@tags = GetTags()
 		@member_id = GetMemberID()
 		@member_name = GetMemberName()
 	end
 	attr_reader :illust_id
 	attr_reader :illust_title
-	attr_reader :description
+	attr_reader :caption
 	attr_reader :tags
 	attr_reader :member_name
 	attr_reader :member_id
@@ -37,7 +47,7 @@ class Illust < HTMLSource
 	end
 	
 	# イラストの記事内容
-	def GetDescription()
+	def GetCaption()
 		path = 'div[@id="caption_long"]'
 		return @agent.page.at(path).inner_text
 	end
@@ -81,7 +91,7 @@ class Illust < HTMLSource
 		link = @agent.page.search(path)
 		member_name = ""
 		for i in 0..link.length-1
-			# imgタグの中に
+			# imgタグの中にtitleというタグがあって、そこにメンバーの名前が格納されている
 			if link[i]['title'] != nil then
 				member_name = link[i]['title']
 				break
@@ -90,4 +100,54 @@ class Illust < HTMLSource
 		return member_name
 	end
 end
+
+
+
+# GETリクエストを送るクラス
+class GetRequest
+
+	# 初期化するのにページの種類を指定する
+	# 小文字でillustかmemberのどちらか
+	def initialize(page_type)
+		@request_url = "www.pixiv.net"
+		@page_url = ""
+		@param_value_pair = Hash::new
+		@set_param_flag = false
+		
+		# PageTypeの内容からどのページにリクエストを送りたいのか判断する
+		case page_type
+		when "member"
+			@page_url = "/member.php"
+		when "illust"
+			@page_url = "/member_illust.php"
+		end
+	end
+	
+	# GETで送るパラメータと値を指定する
+	def SetParameter(parameter, value)
+		if @set_param_flag == false then
+			@page_url += "?"
+			@set_param_flag = true
+		else
+			@page_url += "&" 
+		end
+		@page_url += parameter.to_s +  "=" + value.to_s
+	end
+	
+	# GETでリクエストを送信し、その結果を取得する
+	def SendRequest()	
+		# URLを展開してGETでアクセス、responseに結果を入れる
+		request = Net::HTTP::Get.new(@page_url)
+		response = Net::HTTP.start(@request_url, 80) {|http|
+			http.request(request)
+		}
+		return response.body	# 本文のみを返す
+	end
+	
+	# リクエストを送るURLを展開する
+	def GetRequestURL()
+		return "http://" + @request_url + @page_url
+	end
+end
+
 
