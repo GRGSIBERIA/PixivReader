@@ -16,6 +16,11 @@ illust = Illust.new(画像のID)
 短いコードで簡単に利用することができます。
 
 
+===依存モジュール===
+Mechanizeを使用しています。
+gem install mechanizeでモジュールを取得してください。
+
+
 ===マニュアル===
 
 Illustクラス
