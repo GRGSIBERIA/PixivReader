@@ -20,7 +20,8 @@ class Illust < HTMLSource
 		@illust_title = GetTitle()
 		@description = GetDescription()
 		@tags = GetTags()
-		
+		@member_id = GetMemberID()
+		@member_name = GetMemberName()
 	end
 	attr_reader :illust_id
 	attr_reader :illust_title
@@ -41,6 +42,7 @@ class Illust < HTMLSource
 		return @agent.page.at(path).inner_text
 	end
 	
+	# タグを取得
 	def GetTags()
 		#path = 'div[@id="tag_area"]'
 		path = 'div[@class=pedia]'
@@ -51,15 +53,41 @@ class Illust < HTMLSource
 		tags = Array.new
 		for i in 0..all_tags.length-1
 			all_tags[i].each{|k,v| 
-				if v.include?("tags.php") then # tags.phpから該当するタグを抜き出す
+				if v.include?("tags.php") then # tags.php以外のタグは排除
 					tags << all_tags[i].inner_text 
 				end
 			}
 		end
-		for i in 0..tags.length-1
-			puts tags[i]
-		end
 		return tags
+	end
+	
+	# 投稿者のPixivメンバーIDの取得
+	def GetMemberID()
+		path = 'h2/a'
+		link = @agent.page.search(path)
+		member_id = ""
+		for i in 0..link.length-1
+			if link[i]['href'].include?('member.php?') then
+				member_id = link[i]['href']
+				break
+			end
+		end
+		return member_id.sub!("member.php?id=", "")
+	end
+	
+	# Pixivメンバーの名前を取得する
+	def GetMemberName()
+		path = 'h2/a/img'
+		link = @agent.page.search(path)
+		member_name = ""
+		for i in 0..link.length-1
+			# imgタグの中に
+			if link[i]['title'] != nil then
+				member_name = link[i]['title']
+				break
+			end
+		end
+		return member_name
 	end
 end
 
