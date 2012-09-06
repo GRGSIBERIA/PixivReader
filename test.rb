@@ -1,4 +1,6 @@
 ﻿require './pixiv/pixiv_illust.rb'
 
-h = Illust.new(29908791)
-puts h.caption
+illust = Illust.new(29908791)
+puts illust.title
+puts illust.caption
+puts illust.tags

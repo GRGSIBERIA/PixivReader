@@ -27,14 +27,14 @@ class Illust < HTMLSource
 		super(request.GetRequestURL())	# ここでMechanizeの初期化を行う
 	
 		@illust_id = illust_id
-		@illust_title = GetTitle()
+		@title = GetTitle()
 		@caption = GetCaption()
 		@tags = GetTags()
 		@member_id = GetMemberID()
 		@member_name = GetMemberName()
 	end
 	attr_reader :illust_id
-	attr_reader :illust_title
+	attr_reader :title
 	attr_reader :caption
 	attr_reader :tags
 	attr_reader :member_name
