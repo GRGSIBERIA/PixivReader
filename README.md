@@ -67,5 +67,3 @@ mail: nanashi4129(あ)gmail.com
 twit: https://twitter.com/GRGSIBERIA
 blog: http://blogs.yahoo.co.jp/nanashi_hippie
 FB: http://www.facebook.com/takebuchie
-
-test
