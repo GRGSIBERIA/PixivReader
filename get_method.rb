@@ -27,6 +27,7 @@ class GetRequest
 	def SetParameter(parameter, value)
 		if @set_param_flag == false then
 			@page_url += "?"
+			@set_param_flag = true
 		else
 			@page_url += "&" 
 		end
@@ -42,9 +43,9 @@ class GetRequest
 		}
 		return response.body	# 本文のみを返す
 	end
+	
+	# リクエストを送るURLを展開する
+	def GetRequestURL()
+		return "http://" + @request_url + @page_url
+	end
 end
-
-request = GetRequest.new(PageType::MEMBER)
-request.SetParameter("id", 32777)
-
-open("test.txt", "w") {|f| f.write request.SendRequest()}
