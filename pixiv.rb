@@ -15,7 +15,7 @@ class HTMLSource
 	end
 end
 
-
+class IllustNotFoundError < StandardError; end
 
 # イラスト情報を格納するためのクラス
 class Illust < HTMLSource
@@ -25,6 +25,10 @@ class Illust < HTMLSource
 		request.SetParameter("illust_id", illust_id)
 		
 		super(request.GetRequestURL())	# ここでMechanizeの初期化を行う
+	
+		if !@agent.page.at('span[@class="error"]') then
+			raise IllustNotFoundError, illust_id.to_s + " is not found."
+		end
 	
 		@illust_id = illust_id
 		@title = GetTitle()
