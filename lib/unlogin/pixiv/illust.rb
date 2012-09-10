@@ -1,19 +1,27 @@
+﻿=begin
+イラスト情報を取得するためのクラス
+=end
 require './pixiv/html_source.rb'
+require './pixiv/error.rb'
 
 module Pixiv
-	# �C���X�g�����i�[���邽�߂̃N���X
+	# イラスト情報を格納するためのクラス
 	class Illust < HTMLSource
 		def initialize(illust_id)
-			request = GetRequest.new("illust")		# �R���X�g���N�^�ŃC���X�g���w��
+			request = GetRequest.new("illust")		# コンストラクタでイラストを指定
 			request.SetParameter("mode", "medium")
 			request.SetParameter("illust_id", illust_id)
 			
-			super(request.GetRequestURL())	# ������Mechanize�̏��������s��
+			super(request.GetRequestURL())	# ここでMechanizeの初期化を行う
 		
 			if !@agent.page.at('span[@class="error"]') then
 				raise IllustNotFoundError, illust_id.to_s + " is not found."
 			end
+			InitializeAttributes()
+		end
 		
+		# イラストのIDなどを初期化する
+		def InitializeAttributes()
 			@illust_id = illust_id
 			@title = GetTitle()
 			@caption = GetCaption()
@@ -28,29 +36,29 @@ module Pixiv
 		attr_reader :member_name
 		attr_reader :member_id
 		
-		# �^�C�g�����擾���Ă���
+		# タイトルを取得してくる
 		def GetTitle()
 			path = 'h1[@class="title"]'
 			return @agent.page.at(path).inner_text
 		end
 		
-		# �C���X�g�̋L�����e
+		# イラストの記事内容
 		def GetCaption()
 			path = 'div[@id="caption_long"]'
 			return @agent.page.at(path).inner_text
 		end
 		
-		# �^�O���擾
+		# タグを取得
 		def GetTags()
 			path = 'div[@class=pedia]'
 			path += '//a'
 			
-			# �E���Ă����^�O�̒�����֘A�y�[�W��r������
+			# 拾ってきたタグの中から関連ページを排除する
 			all_tags = @agent.page.search(path)
 			tags = Array.new
 			for i in 0..all_tags.length-1
 				all_tags[i].each{|k,v| 
-					if v.include?("tags.php") then # tags.php�ȊO�̃^�O�͔r��
+					if v.include?("tags.php") then # tags.php以外のタグは排除
 						tags << all_tags[i].inner_text 
 					end
 				}
@@ -58,7 +66,7 @@ module Pixiv
 			return tags
 		end
 		
-		# ���e�҂�Pixiv�����o�[ID�̎擾
+		# 投稿者のPixivメンバーIDの取得
 		def GetMemberID()
 			path = 'h2/a'
 			link = @agent.page.search(path)
@@ -72,13 +80,13 @@ module Pixiv
 			return member_id.sub!("member.php?id=", "")
 		end
 		
-		# Pixiv�����o�[�̖��O���擾����
+		# Pixivメンバーの名前を取得する
 		def GetMemberName()
 			path = 'h2/a/img'
 			link = @agent.page.search(path)
 			member_name = ""
 			for i in 0..link.length-1
-				# img�^�O�̒���title�Ƃ����^�O�������āA�����Ƀ����o�[�̖��O���i�[����Ă���
+				# imgタグの中にtitleというタグがあって、そこにメンバーの名前が格納されている
 				if link[i]['title'] != nil then
 					member_name = link[i]['title']
 					break
